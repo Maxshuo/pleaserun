@@ -3,7 +3,7 @@ import numpy as np
 import tflearn
 from collections import deque
 import random
-import ipdb as pdb
+
 
 # setting for hidden layers 
 Layer1 = 400
