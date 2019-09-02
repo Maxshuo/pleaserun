@@ -24,7 +24,7 @@ for k in range(5):
                     'critic_lr': 0.001, 'gamma': 0.99, 'buffer_size': 250000,
                     'random_seed': int(time.clock() * 1000 % 1000), 'epsilon': epsilon, 'sigma2': SIGMA2}
 
-    IS_TRAIN = False
+    IS_TRAIN = True
     #     rate = 3.0
     res_path = 't_M_02_nB_dqn/'
     model_path = 'model_M_02_nB_dqn/my_train_model_' + str(k) + '-2000'
@@ -39,7 +39,7 @@ for k in range(5):
                    {'id': '3', 'model': 'AR', 'num_r': NUM_R, 'rate': 3.0, 'dis': 100, 'action_bound': 2,
                     'data_buf_size': 100, 't_factor': t_factor, 'penalty': 1000, 'action_level': 5}]
 
-    if not os.path.exists(res_path):
+    if not os.path.exists(res_path): #如果res_path不存在，就建一个
         os.mkdir(res_path)
 
     print(user_config)

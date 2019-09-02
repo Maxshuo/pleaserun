@@ -32,7 +32,7 @@ class MarkovModel(object):
         # calculate the transition prob
         self.trans_p = trans_p
         self.state_avg = state_avg
-        self.state = np.random.randint(0, 11) # states in {0,...,9}
+        self.state = np.random.randint(0, 11) # states in {0,...,10}
 
     def getCh(self):
         return np.array([np.sqrt(self.path_loss*self.state_avg[self.state])])
@@ -48,7 +48,7 @@ class MarkovModel(object):
         return self.getCh()
 
 def complexGaussian(row=1, col=1, amp=1.0):
-    real = np.random.normal(size=[row,col])[0]*np.sqrt(0.5)
+    real = np.random.normal(size=[row,col])[0]*np.sqrt(0.5) #[0]取一行
     img = np.random.normal(size=[row,col])[0]*np.sqrt(0.5)
     return amp*(real + 1j*img)
     
@@ -65,7 +65,7 @@ class ARModel(object):
         self.H = complexGaussian(self.n_t, self.n_r)  
         
     def getCh(self):
-        return self.H*np.sqrt(self.path_loss)
+        return self.H*np.sqrt(self.path_loss) #为什么是开方后再乘以H 1*N的数据
         
     def sampleCh(self):
         self.H = self.rho*self.H + complexGaussian(self.n_t, self.n_r, np.sqrt(1-self.rho*self.rho))

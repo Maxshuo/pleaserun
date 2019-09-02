@@ -3,7 +3,7 @@ import tflearn
 from tflearn.layers.estimator import regression
 import tensorflow as tf
 
-path = 'data_set_LGD.npz'
+path = 'data_set_OGD.npz'
 res = np.load(path)
 data_set = res['arr_0']
 train_input = np.array([sample[0] for sample in data_set])
