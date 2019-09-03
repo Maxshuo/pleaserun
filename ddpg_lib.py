@@ -90,7 +90,7 @@ class ActorNetwork(object):
         # Final layer weights are init to Uniform[-3e-3, 3e-3]
         w_init = tflearn.initializations.uniform(minval=-0.003, maxval=0.003)
         out = tflearn.fully_connected(
-            net, self.a_dim, activation='sigmoid', weights_init=w_init)
+            net, self.a_dim, activation='sigmoid', weights_init=w_init) #self.a_dim是两个神经元，为2
         # Scale output to -action_bound to action_bound
         scaled_out = tf.multiply(out, self.action_bound, name="output_"+str(self.user_id))
         return inputs, out, scaled_out
@@ -189,7 +189,7 @@ class CriticNetwork(object):
         # actions except for one.
         self.action_grads = tf.gradients(self.out, self.action)
 
-    def create_critic_network(self):
+    def create_critic_network(self):#把具体的动作a需要输进去
         inputs = tflearn.input_data(shape=[None, self.s_dim])
         action = tflearn.input_data(shape=[None, self.a_dim])
         net = tflearn.fully_connected(inputs, Layer1)
@@ -229,7 +229,7 @@ class CriticNetwork(object):
             self.target_action: action
         })
 
-    def action_gradients(self, inputs, actions):
+    def action_gradients(self, inputs, actions): #q(a),不是q(ai),计算得三角形J
         return self.sess.run(self.action_grads, feed_dict={
             self.inputs: inputs,
             self.action: actions
@@ -292,7 +292,7 @@ class DeepQNetwork(object):
         # Weights are init to Uniform[-3e-3, 3e-3]
 #         w_init = tflearn.initializations.uniform(minval=-0.003, maxval=0.003)
         q_out = tflearn.fully_connected(net, self.a_dim, name="output_"+str(self.user_id))
-        return inputs, q_out
+        return inputs, q_out #DQN输出很多动作
 
     def train(self, inputs, target_Q):
         return self.sess.run([self.loss, self.optimize], feed_dict={
@@ -310,7 +310,7 @@ class DeepQNetwork(object):
         q_out = self.sess.run(self.target_q_out, feed_dict={
             self.target_inputs: inputs
         })
-        return np.argmax(q_out, axis=1), q_out
+        return np.argmax(q_out, axis=1), q_out #选最大Q的动作
 
     def update_target_network(self):
         self.sess.run(self.update_target_network_params)
@@ -359,7 +359,7 @@ class ReplayBuffer(object):
         self.buffer_size = buffer_size
         self.count = 0
         self.buffer = deque()
-        random.seed(random_seed)
+        random.seed(random_seed) #每次采样一样的东西出来
 
     def add(self, s, a, r, t, s2):
         experience = (s, a, r, t, s2)

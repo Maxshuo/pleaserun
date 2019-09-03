@@ -84,7 +84,7 @@ class DDPGAgentLD(object):
     
     def predict(self, s):
 #         pdb.set_trace()
-        return self.actor.predict(np.reshape(s, (1, self.state_dim)))[0]
+        return self.actor.predict(np.reshape(s, (1, self.state_dim)))[0] #转为1*3的结构,[0]的作用,2维[[]]变[]
     
     def init_target_network(self):
         pass
@@ -103,7 +103,7 @@ class DQNAgent(object):
         
         self.action_nums = 1
         for i in range(self.action_dim):
-            self.action_nums *= self.action_level
+            self.action_nums *= self.action_level #等于25
         
         self.max_step = 100000
         self.pre_train_steps = 5000
@@ -122,7 +122,7 @@ class DQNAgent(object):
         if np.random.rand(1) < self.epsilon or self.total_step < self.pre_train_steps:
             action = np.random.randint(0, self.action_nums)
         else:
-            action, _ = self.DQN.predict(np.reshape(s, (1, self.state_dim)))
+            action, _ = self.DQN.predict(np.reshape(s, (1, self.state_dim))) #为什么不加[0]
         
         self.total_step += 1
         return action, np.zeros([1])
@@ -139,12 +139,12 @@ class DQNAgent(object):
             _, q_out = self.DQN.predict(s_batch)
             target_prediction, target_q_out = self.DQN.predict_target(s2_batch)
             
-            for k in range(self.minibatch_size):
+            for k in range(self.minibatch_size):#?
                 if t_batch[k]:
                     q_out[k][a_batch[k]] = r_batch[k]
                 else:
                     q_out[k][a_batch[k]] = r_batch[k] + self.DQN.gamma * target_q_out[k][target_prediction[k]]
-
+            #第几个minibatch的Q(s,a)值，挑出最大的更新一波
             # Update the critic given the targets
             q_loss, _ = self.DQN.train(
                 s_batch, q_out) 
@@ -188,7 +188,7 @@ class DDPGAgent(object):
         self.critic.update_target_network()
 
     # input current state and then return the next action
-    def predict(self, s, isUpdateActor):
+    def predict(self, s, isUpdateActor): #???
         if isUpdateActor:
             noise = self.actor_noise()
         else:
